@@ -1,0 +1,33 @@
+---
+- hosts: all
+
+  tasks:
+    - name: Updating packages list
+      become: yes
+      become_method: sudo
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Upgrading packages to the latest version
+      become: yes
+      become_method: sudo
+      apt:
+        upgrade: yes
+
+    - name: Installing ZSH, Exa, and Neofetch
+      become: yes
+      become_method: sudo
+      apt:
+        pkg={{item}}
+        state=present
+      with_items:
+        - zsh
+        - exa
+        - neofetch
+
+    - name: Adds default id_rsa key
+      authorized_key:
+        user: pi
+        state: present
+        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
