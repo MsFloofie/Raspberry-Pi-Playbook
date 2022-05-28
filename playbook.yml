@@ -2,29 +2,20 @@
 - hosts: all
 
   tasks:
-    - name: Updating packages list
-      become: yes
-      become_method: sudo
+    - name: Updating and upgrading package list
+      become: true
       apt:
+        upgrade: yes
         update_cache: yes
         cache_valid_time: 3600
 
-    - name: Upgrading packages to the latest version
-      become: yes
-      become_method: sudo
-      apt:
-        upgrade: yes
-
     - name: Installing ZSH, Exa, and Neofetch
-      become: yes
-      become_method: sudo
+      become: true
       apt:
-        pkg={{item}}
-        state=present
-      with_items:
-        - zsh
-        - exa
-        - neofetch
+        pkg:
+          - zsh
+          - exa
+          - neofetch
 
     - name: Adds default id_rsa key
       authorized_key:
